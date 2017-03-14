@@ -26,7 +26,17 @@ public class UsuarioController extends  HttpServlet {
 		//Capturando o que vem do client
 		Usuario usu = new Usuario(nome,email); 
 		//Inserindo
-		lista.add(usu);
+		boolean achou=false;
+		for(int i=0;i<lista.size();i++){
+			if(lista.get(i).getEmail()==email){
+				achou=true;
+			}
+		}
+		if(achou==true){
+			resp.getWriter().print("E-mail ja esta cadastrado");
+		}else{
+			lista.add(usu);
+		}
 		resp.getWriter().print("{Nome:"+usu.getNome()+"  Email:"+usu.getEmail()+"}");
 	}
 
@@ -41,4 +51,29 @@ public class UsuarioController extends  HttpServlet {
 		json+="\n]";
 		resp.getWriter().print(json);
 	}
+//	@Override
+//	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//		String nome = req.getParameter("nome");
+//		String email = req.getParameter("email");
+//		for(int i=0;i<lista.size();i++){
+//			if(lista.get(i).getNome()!=nome&&lista.get(i).getEmail()!=email){
+//				lista.remove(i);
+//				break;
+//			}
+//		}
+//	}
+	@Override
+	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		int num = Integer.parseInt(req.getParameter("posicao"));
+		lista.remove(num);
+	}
+	@Override
+	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		int num = Integer.parseInt(req.getParameter("posicao"));
+		String nome = req.getParameter("nome");
+		String email = req.getParameter("email");
+		lista.get(num).setNome(nome);
+		lista.get(num).setEmail(email);
+	}
+	
 }
